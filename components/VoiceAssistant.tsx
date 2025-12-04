@@ -76,6 +76,10 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
 
     const startSession = async () => {
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error("Navegador sem suporte a microfone.");
+        }
+
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         
         // Initialize Audio Contexts
@@ -87,7 +91,18 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
         outputNodeRef.current.connect(outputAudioContextRef.current.destination);
 
         // Get User Media
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err: any) {
+            if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError' || err.message?.includes('device not found')) {
+                throw new Error("Nenhum microfone encontrado.");
+            } else if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                throw new Error("Permissão do microfone negada.");
+            } else {
+                throw err;
+            }
+        }
         
         // Connect to Gemini Live
         const sessionPromise = ai.live.connect({
@@ -179,7 +194,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
                 console.error("Session error", err);
                 if (mounted) {
                     setStatus('error');
-                    setErrorMsg("Erro na conexão.");
+                    setErrorMsg("Erro na conexão com IA.");
                 }
             }
           }
@@ -189,7 +204,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
         console.error(e);
         if (mounted) {
             setStatus('error');
-            setErrorMsg(e.message || "Não foi possível iniciar o assistente.");
+            setErrorMsg(e.message || "Não foi possível iniciar.");
         }
       }
     };
