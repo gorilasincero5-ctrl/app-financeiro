@@ -39,7 +39,7 @@ export const Settings: React.FC = () => {
             <div className="flex items-center justify-start gap-4 rounded-xl bg-white dark:bg-gray-800/20 p-4 shadow-sm">
                 <div 
                   className="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" 
-                  style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAU7c8aZgY0nkiA7ikw46c41X1H1s1sn8jNPUMkHmQkivx2Of0TNO_8vmyUNVjVSz7cVRqG-vVZP-m1XLG3buMfGAy9KOMPnrNSdimYtg4tKd7x1050F_P3MHucujliy1cVIbRxvTQhil8SB_GfeMvLF9aE9dLBAS5zFf3aG72-MnnDO15f78i619lCFMToeOKwgyYNCW4qlP9hLlXgElMKe4VN2nANl7r-h-tNieMgD0cEbeLTX9w5w-ghLFSxjm9YXCWM0vqLSm4")' }}
+                  style={{ backgroundImage: 'url("https://ui-avatars.com/api/?name=Usuario&background=13ec6d&color=fff&size=128")' }}
                 ></div>
                 <div className="flex flex-col gap-1 flex-1">
                     <p className="text-gray-900 dark:text-white text-base font-bold leading-tight">Nome do Usuário</p>
