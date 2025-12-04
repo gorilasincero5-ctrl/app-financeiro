@@ -76,6 +76,10 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
 
     const startSession = async () => {
       try {
+        if (!process.env.API_KEY) {
+            throw new Error("Chave de API não configurada.");
+        }
+
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error("Navegador sem suporte a microfone.");
         }
@@ -95,12 +99,19 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
         try {
             stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         } catch (err: any) {
-            if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError' || err.message?.includes('device not found')) {
+            console.error("Microphone access error:", err);
+            // Handle various browser error names for missing devices
+            if (
+                err.name === 'NotFoundError' || 
+                err.name === 'DevicesNotFoundError' || 
+                err.message?.toLowerCase().includes('device not found') ||
+                err.message?.toLowerCase().includes('requested device not found')
+            ) {
                 throw new Error("Nenhum microfone encontrado.");
             } else if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
                 throw new Error("Permissão do microfone negada.");
             } else {
-                throw err;
+                throw new Error("Erro ao acessar o microfone.");
             }
         }
         
@@ -260,6 +271,14 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onClose }) => {
                 <p className="text-zinc-400">
                     {status === 'error' ? errorMsg : "Converse com o Assistente Finanças Pro"}
                 </p>
+                {status === 'error' && (
+                    <button 
+                        onClick={onClose}
+                        className="mt-4 px-6 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm font-medium transition-colors"
+                    >
+                        Fechar
+                    </button>
+                )}
             </div>
         </div>
 
