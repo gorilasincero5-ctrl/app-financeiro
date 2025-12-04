@@ -1,0 +1,7 @@
+{
+  "name": "Finanças Pro",
+  "description": "Aplicativo completo de gestão financeira pessoal com controle de despesas, orçamento, metas e simulação de salário.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
